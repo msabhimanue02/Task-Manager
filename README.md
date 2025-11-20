@@ -43,12 +43,5 @@ task-manager-assessment/
 
 All responses are JSON; validation errors return descriptive messages with proper HTTP status codes.
 
-## Future Enhancements
-
-1. Replace Basic Auth with JWT + role-based policies.
-2. Add automated tests (Jest/Vitest) covering services and hooks.
-3. Containerize services with Docker Compose for one-command bootstrapping.
-4. Integrate CI workflows (GitHub Actions) for lint, test, and deploy gates.
-
 ---
 
