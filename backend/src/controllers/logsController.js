@@ -1,0 +1,53 @@
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+const DEFAULT_PER_PAGE = 10;
+const MAX_PER_PAGE = 25;
+const parsePositiveInt = (value, fallback) => {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed <= 0)
+        return fallback;
+    return parsed;
+};
+const tryParseJson = (payload) => {
+    if (!payload)
+        return null;
+    try {
+        return JSON.parse(payload);
+    }
+    catch (err) {
+        console.warn('Failed to parse audit payload', err);
+        return null;
+    }
+};
+export async function getLogs(req, res) {
+    const page = Math.max(1, parsePositiveInt(req.query.page, 1));
+    const perPageInput = parsePositiveInt(req.query.perPage, DEFAULT_PER_PAGE);
+    const perPage = Math.min(perPageInput, MAX_PER_PAGE);
+    const skip = (page - 1) * perPage;
+    const where = {};
+    const action = req.query.action?.trim();
+    const taskIdRaw = req.query.taskId;
+    if (action)
+        where.action = action;
+    if (taskIdRaw) {
+        const parsedTaskId = Number(taskIdRaw);
+        if (!Number.isNaN(parsedTaskId)) {
+            where.taskId = parsedTaskId;
+        }
+    }
+    const [total, logs] = await Promise.all([
+        prisma.auditLog.count({ where }),
+        prisma.auditLog.findMany({
+            where,
+            orderBy: { timestamp: 'desc' },
+            skip,
+            take: perPage,
+        }),
+    ]);
+    const normalized = logs.map((log) => ({
+        ...log,
+        updatedContent: tryParseJson(log.updatedContent ?? null),
+    }));
+    res.json({ total, page, perPage, logs: normalized });
+}
+//# sourceMappingURL=logsController.js.map
