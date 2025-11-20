@@ -28,67 +28,9 @@ Full-stack task management platform featuring a hardened Express/Prisma API and 
 
 ```
 task-manager-assessment/
-├── backend/        # Express API, Prisma schema, and services
-├── frontend/       # React client built with Vite
-└── full-stack-assessment.pdf  # Challenge brief (for reference)
+├── backend/        
+└── frontend/ 
 ```
-
-## Getting Started
-
-### 1. Clone and install
-
-```bash
-git clone https://github.com/<your-username>/<repo>.git
-cd task-manager-assessment
-
-# Backend deps
-cd backend
-npm install
-
-# Frontend deps
-cd ../frontend
-npm install
-```
-
-### 2. Configure environment
-
-Create `backend/.env` with your desired port and database URL (SQLite by default):
-
-```
-PORT=4000
-DATABASE_URL="file:./dev.db"
-BASIC_AUTH_USER=admin
-BASIC_AUTH_PASSWORD=change-me
-```
-
-Run Prisma migrations and generate the client:
-
-```bash
-cd backend
-npx prisma migrate dev --name init
-npx prisma generate
-```
-
-### 3. Run the stack
-
-**Backend:**
-
-```bash
-cd backend
-npm run dev
-# Server listening on http://localhost:4000
-```
-
-**Frontend:**
-
-```bash
-cd frontend
-npm run dev
-# Vite will print the local URL (default http://localhost:5173)
-```
-
-Log in using the Basic Auth credentials from your `.env`. The frontend proxies API calls to `http://localhost:4000/api` by default (see `frontend/src/config.ts`).
-
 ## API Overview
 
 | Method | Endpoint | Description |
@@ -101,13 +43,6 @@ Log in using the Basic Auth credentials from your `.env`. The frontend proxies A
 
 All responses are JSON; validation errors return descriptive messages with proper HTTP status codes.
 
-## Frontend Experience
-
-- Global layout with navigation between **Tasks** and **Audit Logs**.
-- Debounced search, client-side pagination controls, and optimistic table updates.
-- Modal form supports both create and edit flows, automatically resetting pagination on new tasks.
-- Audit log table surfaces structured JSON payloads to highlight what changed per action.
-
 ## Future Enhancements
 
 1. Replace Basic Auth with JWT + role-based policies.
@@ -117,4 +52,3 @@ All responses are JSON; validation errors return descriptive messages with prope
 
 ---
 
-**Why it stands out:** This codebase emphasizes security, maintainability, and user experience with clear separation of concerns and pragmatic tooling—ideal for showcasing full-stack craftsmanship to prospective employers.
